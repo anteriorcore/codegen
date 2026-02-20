@@ -1,19 +1,56 @@
 # codegen flake module
 
-Soft launch -- use at your own peril, no guarantees made about quality or function.
+Declarative configuration for vendoring auto generated files in your repo.  Includes a single command to regenerate everything, and integrates with `nix flake check` to ensure all your auto generated files are up-to-date.
 
-Usage when installed:
+## Usage
 
-```
-nix run .#codegen
+In your flake, add this module (assuming you use [flake.parts](https://flake.parts), and set the following configuration:
+
+```nix
+{
+  inputs.codegen.url = "github:anteriorcore/codegen";
+  # ...
+
+  outputs = { ... }@inputs: {
+    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+      # ...
+      imports = [
+        inputs.codegen.flakeModule.default
+        ({
+          perSystem =
+            { self', ... }:
+            {
+              codegen = {
+                enable = true;
+                root = ./.;
+                files ={
+                  ".github/workflows".source = "${self'.packages.github-actions}/";
+                  ".nixos.version".text = "${inputs.nixpkgs.shortRev}\n";
+                };
+              };
+            };
+        })
+      ];
+    };
+}
 ```
 
-```
-nix flake check
+Regenerate all files:
+
+```command
+$ nix run .#codegen
 ```
 
+Check files are up to date:
+
+```command
+$ nix flake check
 ```
-nix build .#codegen
+
+See the generated output without affecting your working directory:
+
+```command
+$ nix build .#codegen
 ```
 
 ## Copyright & License

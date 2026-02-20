@@ -13,15 +13,22 @@
         {
           flake.flakeModules.default = import ./codegen.nix;
           perSystem =
-            { ... }:
+            { config, self', ... }:
             {
               treefmt = import ./nix/treefmt.nix;
+              # Demonstration:
+              codegen = {
+                enable = true;
+                root = ./.;
+                files.".nixpkgs.version".text = "${inputs.nixpkgs.shortRev}\n";
+              };
             };
         };
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import systems;
       imports = [
+        ./codegen.nix
         codegenFlake
         inputs.treefmt-nix.flakeModule
         inputs.flake-parts.flakeModules.flakeModules
