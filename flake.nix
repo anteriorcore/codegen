@@ -11,7 +11,7 @@
       codegenFlake =
         { ... }:
         {
-          flake.flakeModules.default = import ./codegen.nix;
+          flake.flakeModules.default = ./codegen.nix;
           perSystem =
             { config, self', ... }:
             {
