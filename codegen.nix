@@ -42,10 +42,14 @@
         }:
         {
           options = {
-            source = lib.mkOption { type = types.pathInStore; };
+            source = lib.mkOption {
+              type = types.pathInStore;
+              description = "File or directory to treat as the source for this target";
+            };
             text = lib.mkOption {
               type = types.nullOr types.str;
               default = null;
+              description = "Verbatim content for this file as a string";
             };
           };
           config = {
