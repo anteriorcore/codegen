@@ -8,22 +8,18 @@
   outputs =
     { flake-parts, systems, ... }@inputs:
     let
-      codegenFlake =
-        { ... }:
-        {
-          flake.flakeModules.default = ./codegen.nix;
-          perSystem =
-            { config, self', ... }:
-            {
-              treefmt = import ./nix/treefmt.nix;
-              # Demonstration:
-              codegen = {
-                enable = true;
-                root = ./.;
-                files.".nixpkgs.version".text = "${inputs.nixpkgs.shortRev}\n";
-              };
-            };
+      codegenFlake = { ... }: {
+        flake.flakeModules.default = ./codegen.nix;
+        perSystem = { config, self', ... }: {
+          treefmt = import ./nix/treefmt.nix;
+          # Demonstration:
+          codegen = {
+            enable = true;
+            root = ./.;
+            files.".nixpkgs.version".text = "${inputs.nixpkgs.shortRev}\n";
+          };
         };
+      };
     in
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = import systems;
