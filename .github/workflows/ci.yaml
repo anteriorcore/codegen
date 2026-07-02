@@ -15,7 +15,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - run: nix flake show
       - run: nix flake lock --no-update-lock-file
       - run: nix flake check --no-build
@@ -32,5 +32,5 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: cachix/install-nix-action@8aa03977d8d733052d78f4e008a241fd1dbf36b3
-      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10
+      - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0
       - run: nix flake check -L --keep-going
